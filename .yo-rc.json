@@ -1,0 +1,41 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.wsfb.volunteer",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.10.3",
+    "applicationType": "monolith",
+    "baseName": "backend",
+    "packageName": "com.wsfb.volunteer",
+    "packageFolder": "com/wsfb/volunteer",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZWU3ZWJjZmZiYzU1NjZjNmRiMjBmZDc0MzAxNGI1OGI2OWI1NzdjYTExODNjYzUyOGU3ZTE1Zjc3ZmJmNDE1MTQ2OWE1MzE1OGM4YTFlMGQwMDc0Yzk0YmY1MDUzNzUwY2ZiMGFjOTdjNGYzNDY3NmIyMDAwNmQ1MTA0OWMwOGI=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "skipClient": true,
+    "creationTimestamp": 1602860869523,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": ["en", "fr"],
+    "blueprints": []
+  }
+}
