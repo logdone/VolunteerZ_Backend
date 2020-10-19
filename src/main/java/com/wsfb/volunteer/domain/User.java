@@ -3,6 +3,8 @@ package com.wsfb.volunteer.domain;
 import com.wsfb.volunteer.config.Constants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
@@ -79,7 +81,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "reset_key", length = 20)
     @JsonIgnore
     private String resetKey;
+    
+    @OneToMany(mappedBy = "user")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Comment> comments = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Reaction> reactions = new HashSet<>();
+    
     @Column(name = "reset_date")
     private Instant resetDate = null;
 
@@ -93,7 +103,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
-
+    @ManyToOne
+    @JsonIgnoreProperties(value = "participants", allowSetters = true)
+    private Event event;
     public Long getId() {
         return id;
     }
@@ -199,6 +211,71 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public User event(Event event) {
+        this.event = event;
+        return this;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+    
+    
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public User comments(Set<Comment> comments) {
+        this.comments = comments;
+        return this;
+    }
+
+    public User addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setUser(this);
+        return this;
+    }
+
+    public User removeComment(Comment comment) {
+        this.comments.remove(comment);
+        comment.setUser(null);
+        return this;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Set<Reaction> getReactions() {
+        return reactions;
+    }
+
+    public User reactions(Set<Reaction> reactions) {
+        this.reactions = reactions;
+        return this;
+    }
+
+    public User addReaction(Reaction reaction) {
+        this.reactions.add(reaction);
+        reaction.setUser(this);
+        return this;
+    }
+
+    public User removeReaction(Reaction reaction) {
+        this.reactions.remove(reaction);
+        reaction.setUser(null);
+        return this;
+    }
+
+    public void setReactions(Set<Reaction> reactions) {
+        this.reactions = reactions;
+    }
+
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) {

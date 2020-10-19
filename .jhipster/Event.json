@@ -1,0 +1,106 @@
+{
+  "name": "Event",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
+    },
+    {
+      "fieldName": "eventDescription",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "eventImage",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "category",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "creationDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "eventDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "maxNumberVolunteers",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "min"
+      ],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "nbrReports",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "link",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "location",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "comment",
+      "otherEntityRelationshipName": "event",
+      "relationshipName": "comment"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "reaction",
+      "otherEntityRelationshipName": "event",
+      "relationshipName": "reaction"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "extendedUser",
+      "otherEntityRelationshipName": "event",
+      "relationshipName": "participants"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "extendedUser",
+      "otherEntityRelationshipName": "event",
+      "relationshipName": "owner",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201019114318",
+  "entityTableName": "event",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

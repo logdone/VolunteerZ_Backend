@@ -1,0 +1,36 @@
+{
+  "name": "ExtendedUser",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "comment",
+      "otherEntityRelationshipName": "extendedUser",
+      "relationshipName": "comment"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "reaction",
+      "otherEntityRelationshipName": "extendedUser",
+      "relationshipName": "reaction"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "event",
+      "otherEntityRelationshipName": "participants",
+      "relationshipName": "event",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201019114418",
+  "entityTableName": "extended_user",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

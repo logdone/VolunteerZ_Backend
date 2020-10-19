@@ -1,0 +1,31 @@
+{
+  "name": "Reaction",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "event",
+      "otherEntityRelationshipName": "reaction",
+      "relationshipName": "event",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "extendedUser",
+      "otherEntityRelationshipName": "reaction",
+      "relationshipName": "extendedUser",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201019114618",
+  "entityTableName": "reaction",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

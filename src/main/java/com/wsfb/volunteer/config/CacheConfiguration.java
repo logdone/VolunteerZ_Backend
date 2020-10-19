@@ -48,6 +48,14 @@ public class CacheConfiguration {
             createCache(cm, com.wsfb.volunteer.domain.User.class.getName());
             createCache(cm, com.wsfb.volunteer.domain.Authority.class.getName());
             createCache(cm, com.wsfb.volunteer.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.wsfb.volunteer.domain.Event.class.getName());
+            createCache(cm, com.wsfb.volunteer.domain.Event.class.getName() + ".comments");
+            createCache(cm, com.wsfb.volunteer.domain.Event.class.getName() + ".reactions");
+            createCache(cm, com.wsfb.volunteer.domain.Event.class.getName() + ".participants");
+            createCache(cm, com.wsfb.volunteer.domain.User.class.getName() + ".comments");
+            createCache(cm, com.wsfb.volunteer.domain.User.class.getName() + ".reactions");
+            createCache(cm, com.wsfb.volunteer.domain.Comment.class.getName());
+            createCache(cm, com.wsfb.volunteer.domain.Reaction.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
