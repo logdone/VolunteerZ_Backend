@@ -123,6 +123,7 @@ public class EventResource {
     @GetMapping("/events/participate/{id}/{userId}")
     public ResponseEntity<Void> participate(@PathVariable Long id,@PathVariable String userId) {
         log.debug("REST request to get Event : {}", id);
+        System.out.println("Participating to event "+id+" The user is "+userId);
         Event event = eventRepository.findById(id).get();
        User user = userRepository.findOneByLogin(userId).get();
        Set<User> participants = event.getParticipants();
