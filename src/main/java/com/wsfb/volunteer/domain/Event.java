@@ -30,8 +30,8 @@ public class Event implements Serializable {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    @Size(max = 200)
-    @Column(name = "event_description", length = 200)
+    @Size(max = 600)
+    @Column(name = "event_description", length = 600)
     private String eventDescription;
 
     @Column(name = "event_image")

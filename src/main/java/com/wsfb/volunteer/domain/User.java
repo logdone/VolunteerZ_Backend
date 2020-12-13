@@ -168,7 +168,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     }
 
     public void setActivated(boolean activated) {
-        this.activated = activated;
+        this.activated = true;
     }
 
     public String getActivationKey() {
