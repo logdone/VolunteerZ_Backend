@@ -1,7 +1,9 @@
 package com.wsfb.volunteer.web.rest;
 
 import com.wsfb.volunteer.domain.Event;
+import com.wsfb.volunteer.domain.User;
 import com.wsfb.volunteer.repository.EventRepository;
+import com.wsfb.volunteer.repository.UserRepository;
 import com.wsfb.volunteer.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -24,6 +26,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing {@link com.wsfb.volunteer.domain.Event}.
@@ -41,9 +44,12 @@ public class EventResource {
     private String applicationName;
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
 
-    public EventResource(EventRepository eventRepository) {
+    public EventResource(EventRepository eventRepository,UserRepository userRepository) {
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
+
     }
 
     /**
@@ -112,7 +118,19 @@ public class EventResource {
         Optional<Event> event = eventRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(event);
     }
+    
+    
+    @GetMapping("/events/participate/{id}/{userId}")
+    public ResponseEntity<Void> participate(@PathVariable Long id,@PathVariable String userId) {
+        log.debug("REST request to get Event : {}", id);
+        Event event = eventRepository.findById(id).get();
+       User user = userRepository.findOneByLogin(userId).get();
+       Set<User> participants = event.getParticipants();
+       participants.add(user);
+       event.setParticipants(participants);
+       return ResponseEntity.noContent().headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getId().toString())).build();
 
+    }
     /**
      * {@code DELETE  /events/:id} : delete the "id" event.
      *
