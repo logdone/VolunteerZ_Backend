@@ -1,5 +1,6 @@
 package com.wsfb.volunteer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -29,14 +30,30 @@ public class Comment implements Serializable {
     private String commentBody;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "comments", allowSetters = true)
+    @JoinColumn(name="event_id", nullable=false)
+    @JsonIgnore
     private Event event;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "comments", allowSetters = true)
+    @JoinColumn(name="user_id", nullable=false)
+    @JsonIgnore
     private User user;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    public Comment() {}
+    
+    
+    
+    
+    
+    public Comment(Long id,  String commentBody, Event event, User user) {
+		super();
+		this.id = id;
+		this.commentBody = commentBody;
+		this.event = event;
+		this.user = user;
+	}
+
+	// jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }

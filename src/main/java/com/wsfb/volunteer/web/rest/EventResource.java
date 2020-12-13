@@ -100,7 +100,7 @@ public class EventResource {
     public ResponseEntity<List<Event>> getAllEvents(Pageable pageable) {
         Page<Event> page = eventRepository.findAll(pageable);
         for(Event e : page) {
-        System.out.println("************************************************************ nbr participants "+e.getParticipants().size());
+        System.out.println("************************************************************ nbr comments "+e.getComments().size());
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -116,6 +116,7 @@ public class EventResource {
     public ResponseEntity<Event> getEvent(@PathVariable Long id) {
     	System.out.println("in event by id");
         Optional<Event> event = eventRepository.findById(id);
+        System.out.println("----------------------------------------------------"+event.get().getComments().toString());
         return ResponseUtil.wrapOrNotFound(event);
     }
     

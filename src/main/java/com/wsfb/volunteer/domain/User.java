@@ -83,9 +83,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String resetKey;
     
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Reaction> reactions = new HashSet<>();
     
     @Column(name = "reset_date")
@@ -224,6 +226,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     
     
     public Set<Comment> getComments() {
+    	
         return comments;
     }
 
