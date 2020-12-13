@@ -61,7 +61,6 @@ public class EventResource {
      */
     @PostMapping("/events")
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) throws URISyntaxException {
-        log.debug("REST request to save Event : {}", event);
         if (event.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -82,7 +81,6 @@ public class EventResource {
      */
     @PutMapping("/events")
     public ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event) throws URISyntaxException {
-        log.debug("REST request to update Event : {}", event);
         if (event.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -100,8 +98,10 @@ public class EventResource {
      */
     @GetMapping("/events")
     public ResponseEntity<List<Event>> getAllEvents(Pageable pageable) {
-        log.debug("REST request to get a page of Events");
         Page<Event> page = eventRepository.findAll(pageable);
+        for(Event e : page) {
+        System.out.println("************************************************************ nbr participants "+e.getParticipants().size());
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -114,22 +114,29 @@ public class EventResource {
      */
     @GetMapping("/events/{id}")
     public ResponseEntity<Event> getEvent(@PathVariable Long id) {
-        log.debug("REST request to get Event : {}", id);
+    	System.out.println("in event by id");
+        Optional<Event> event = eventRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(event);
+    }
+    
+    @GetMapping("/events/part/{id}")
+    public ResponseEntity<Event> getEventID(@PathVariable Long id) {
+    	System.out.println("im in controller ");
         Optional<Event> event = eventRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(event);
     }
     
     
     @GetMapping("/events/participate/{id}/{userId}")
-    public ResponseEntity<Void> participate(@PathVariable Long id,@PathVariable String userId) {
-        log.debug("REST request to get Event : {}", id);
-        System.out.println("Participating to event "+id+" The user is "+userId);
-        Event event = eventRepository.findById(id).get();
+    public ResponseEntity<Event> participate(@PathVariable Long id,@PathVariable String userId) {
+    	log.debug("Participating to event "+id+" The user is "+userId);
+        Optional<Event> event = eventRepository.findById(id);
        User user = userRepository.findOneByLogin(userId).get();
-       Set<User> participants = event.getParticipants();
+       Set<User> participants = event.get().getParticipants();
        participants.add(user);
-       event.setParticipants(participants);
-       return ResponseEntity.noContent().headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getId().toString())).build();
+       event.get().setParticipants(participants);
+       System.out.println("Event participants "+event.get().getParticipants());
+       return ResponseUtil.wrapOrNotFound(event);
 
     }
     /**

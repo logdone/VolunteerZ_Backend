@@ -83,11 +83,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String resetKey;
     
     @OneToMany(mappedBy = "user")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Reaction> reactions = new HashSet<>();
     
     @Column(name = "reset_date")
@@ -103,9 +101,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = "participants", allowSetters = true)
-    private Event event;
+    @ManyToMany(mappedBy = "participants")
+    private Set<Event> events;
+    
     public Long getId() {
         return id;
     }
@@ -211,17 +209,17 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
 
-    public Event getEvent() {
-        return event;
+    public Set<Event> getEvents() {
+        return events;
     }
 
-    public User event(Event event) {
-        this.event = event;
+    public User event(Set<Event> events) {
+        this.events = events;
         return this;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setEvent(Set<Event> event) {
+        this.events = event;
     }
     
     

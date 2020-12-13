@@ -63,15 +63,16 @@ public class Event implements Serializable {
     private String location;
 
     @OneToMany(mappedBy = "event")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "event")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Reaction> reactions = new HashSet<>();
 
-    @OneToMany(mappedBy = "event")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    @JoinTable(
+      name = "event_participants", 
+      joinColumns = @JoinColumn(name = "event_id"), 
+      inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> participants = new HashSet<>();
 
     @ManyToOne
@@ -278,7 +279,9 @@ public class Event implements Serializable {
 
     public Event addParticipants(User extendedUser) {
         this.participants.add(extendedUser);
-        extendedUser.setEvent(this);
+        Set<Event> events = extendedUser.getEvents();
+        events.add(this);
+        extendedUser.setEvent(events);
         return this;
     }
 
