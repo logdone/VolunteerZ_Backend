@@ -29,12 +29,11 @@ public class Comment implements Serializable {
     @Column(name = "comment_body", length = 200, nullable = false)
     private String commentBody;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY ,cascade = {CascadeType.ALL})
     @JoinColumn(name="event_id", nullable=false)
-    @JsonIgnore
     private Event event;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY ,cascade = {CascadeType.ALL})
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
@@ -65,35 +64,26 @@ public class Comment implements Serializable {
         return commentBody;
     }
 
-    public Comment commentBody(String commentBody) {
-        this.commentBody = commentBody;
-        return this;
-    }
 
     public void setCommentBody(String commentBody) {
         this.commentBody = commentBody;
     }
 
     public Event getEvent() {
+    	event.setComments(null);
         return event;
     }
 
-    public Comment event(Event event) {
-        this.event = event;
-        return this;
-    }
+
 
     public void setEvent(Event event) {
         this.event = event;
     }
 
     public User getUser() {
-        return user;
-    }
+    	event.setComments(null);
 
-    public Comment user(User extendedUser) {
-        this.user = extendedUser;
-        return this;
+        return user;
     }
 
     public void setUser(User extendedUser) {
@@ -101,23 +91,7 @@ public class Comment implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Comment)) {
-            return false;
-        }
-        return id != null && id.equals(((Comment) o).id);
-    }
 
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    // prettier-ignore
     @Override
     public String toString() {
         return "Comment{" +

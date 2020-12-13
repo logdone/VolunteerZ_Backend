@@ -1,6 +1,8 @@
 package com.wsfb.volunteer.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -59,13 +61,13 @@ public class Event implements Serializable {
     private String link;
 
     @NotNull
-    @Column(name = "location", nullable = false)
+    @Column(name = "location", nullable = false )
     private String location;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event" , fetch = FetchType.LAZY)
     private Set<Reaction> reactions = new HashSet<>();
 
     @ManyToMany
@@ -76,7 +78,6 @@ public class Event implements Serializable {
     private Set<User> participants = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "events", allowSetters = true)
     private User owner;
 
 	public Long getId() {
@@ -199,5 +200,14 @@ public class Event implements Serializable {
 		this.owner = owner;
 	}
 
+	@Override
+	public String toString() {
+		return "Event [id=" + id + ", title=" + title + ", eventDescription=" + eventDescription + ", eventImage="
+				+ eventImage + ", category=" + category + ", creationDate=" + creationDate + ", eventDate=" + eventDate
+				+ ", maxNumberVolunteers=" + maxNumberVolunteers + ", nbrReports=" + nbrReports + ", link=" + link
+				+ ", location=" + location + ", owner=" + owner + "]";
+	}
+
+	
 
 }

@@ -82,11 +82,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private String resetKey;
     
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Reaction> reactions = new HashSet<>();
     
@@ -94,7 +94,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Instant resetDate = null;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "jhi_user_authority",
         joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -103,7 +103,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants",fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Event> events;
     
     public Long getId() {
@@ -215,11 +216,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return events;
     }
 
-    public User event(Set<Event> events) {
-        this.events = events;
-        return this;
-    }
-
     public void setEvent(Set<Event> event) {
         this.events = event;
     }
@@ -230,22 +226,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return comments;
     }
 
-    public User comments(Set<Comment> comments) {
-        this.comments = comments;
-        return this;
-    }
-
-    public User addComment(Comment comment) {
-        this.comments.add(comment);
-        comment.setUser(this);
-        return this;
-    }
-
-    public User removeComment(Comment comment) {
-        this.comments.remove(comment);
-        comment.setUser(null);
-        return this;
-    }
+ 
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
@@ -255,22 +236,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return reactions;
     }
 
-    public User reactions(Set<Reaction> reactions) {
-        this.reactions = reactions;
-        return this;
-    }
-
-    public User addReaction(Reaction reaction) {
-        this.reactions.add(reaction);
-        reaction.setUser(this);
-        return this;
-    }
-
-    public User removeReaction(Reaction reaction) {
-        this.reactions.remove(reaction);
-        reaction.setUser(null);
-        return this;
-    }
 
     public void setReactions(Set<Reaction> reactions) {
         this.reactions = reactions;
