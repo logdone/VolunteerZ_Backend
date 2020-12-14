@@ -124,13 +124,16 @@ public class EventResource {
      */
     @GetMapping("/events/{id}")
     public ResponseEntity<Event> getEvent(@PathVariable Long id) {
-    	System.out.println("in event by id");
+        eventRepository.flush();
         Optional<Event> event = eventRepository.findById(id);
+        
         System.out.println("----------------------------------------------------");
         System.out.println("--                                                --");
         System.out.println("--                                                --");
         System.out.println("--                  "+event.get().getComments().size()+"                             --");
         System.out.println("--                  "+event.get().getParticipants().size()+"                             --");
+        System.out.println("--                  "+event.get().getReactions().size()+"                             --");
+
 
         System.out.println("--                                                --");
         System.out.println("----------------------------------------------------");
