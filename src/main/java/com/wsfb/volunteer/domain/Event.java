@@ -1,5 +1,6 @@
 package com.wsfb.volunteer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -65,9 +66,11 @@ public class Event implements Serializable {
     private String location;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("event")
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "event" , fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("event")
     private Set<Reaction> reactions = new HashSet<>();
 
     @ManyToMany

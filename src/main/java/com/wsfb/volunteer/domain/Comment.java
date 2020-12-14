@@ -29,12 +29,14 @@ public class Comment implements Serializable {
     @Column(name = "comment_body", length = 200, nullable = false)
     private String commentBody;
 
-    @ManyToOne(fetch = FetchType.LAZY ,cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name="event_id", nullable=false)
+    @JsonIgnoreProperties({"comments","reactions"})
     private Event event;
 
-    @ManyToOne(fetch = FetchType.LAZY ,cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
+    @JsonIgnoreProperties({"comments","reactions"})
     private User user;
 
     public Comment() {}
@@ -70,7 +72,6 @@ public class Comment implements Serializable {
     }
 
     public Event getEvent() {
-    	event.setComments(null);
         return event;
     }
 
@@ -81,8 +82,6 @@ public class Comment implements Serializable {
     }
 
     public User getUser() {
-    	event.setComments(null);
-
         return user;
     }
 
@@ -92,11 +91,5 @@ public class Comment implements Serializable {
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-            "id=" + getId() +
-            ", commentBody='" + getCommentBody() + "'" +
-            "}";
-    }
+
 }

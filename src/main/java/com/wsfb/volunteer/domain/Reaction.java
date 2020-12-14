@@ -27,11 +27,12 @@ public class Reaction implements Serializable {
     //fuck this shit im out 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="event_id", nullable=false)
-    @JsonIgnore
+    @JsonIgnoreProperties({"comments","reactions"})
     private Event event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
+    @JsonIgnoreProperties({"comments","reactions"})
     private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

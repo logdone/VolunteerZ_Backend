@@ -1,5 +1,6 @@
 package com.wsfb.volunteer.web.rest;
 
+import com.wsfb.volunteer.domain.Comment;
 import com.wsfb.volunteer.domain.Event;
 import com.wsfb.volunteer.domain.User;
 import com.wsfb.volunteer.repository.EventRepository;
@@ -80,11 +81,20 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/events")
+    @Transactional
     public ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event) throws URISyntaxException {
         if (event.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++"+event.getComments().size());
         Event result = eventRepository.save(event);
+        Event res = eventRepository.getOne(event.getId());
+        System.out.println("***********************************************************");
+        for(Comment com : res.getComments()) {
+        	System.out.println("Comment "+com.getCommentBody());
+        }
+        System.out.println("***********************************************************");
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getId().toString()))
             .body(result);
