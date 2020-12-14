@@ -82,9 +82,11 @@ public class EventResource {
     @PutMapping("/events")
     public ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event) throws URISyntaxException {
         System.out.println("***********************************************************");
-        for(Comment com : event.getComments()) {
-        	System.out.println("Comment "+com.getCommentBody());
-        }
+
+        System.out.println("--  "+event.getComments().size()+"         --");
+        System.out.println("--    "+event.getParticipants().size()+"        --");
+        System.out.println("--    "+event.getReactions().size()+"     --");
+
         System.out.println("***********************************************************");
         if (event.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -110,7 +112,9 @@ public class EventResource {
     public ResponseEntity<List<Event>> getAllEvents(Pageable pageable) {
         Page<Event> page = eventRepository.findAll(pageable);
         for(Event e : page) {
-        System.out.println("************************************************************ nbr comments "+e.getComments().size());
+        	 System.out.println("--  "+e.getComments().size()+"         --");
+             System.out.println("--    "+e.getParticipants().size()+"        --");
+             System.out.println("--    "+e.getReactions().size()+"     --");
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
