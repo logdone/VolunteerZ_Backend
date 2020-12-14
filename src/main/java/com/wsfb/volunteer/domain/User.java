@@ -26,7 +26,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "jhi_user")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -103,8 +103,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
-    @ManyToMany(mappedBy = "participants",fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToMany(mappedBy = "participants")
     private Set<Event> events;
     
     public Long getId() {

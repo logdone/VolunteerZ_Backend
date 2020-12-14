@@ -36,7 +36,7 @@ public class Comment implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
-    @JsonIgnoreProperties({"comments","reactions"})
+    @JsonIgnoreProperties("comments")
     private User user;
 
     public Comment() {}

@@ -12,6 +12,7 @@ import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,14 +45,12 @@ public class EventResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final EventRepository eventRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    public  EventRepository eventRepository;
+    @Autowired
+    public  UserRepository userRepository;
 
-    public EventResource(EventRepository eventRepository,UserRepository userRepository) {
-        this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
 
-    }
 
     /**
      * {@code POST  /events} : Create a new event.
@@ -65,7 +64,7 @@ public class EventResource {
         if (event.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Event result = eventRepository.save(event);
+        Event result = eventRepository.saveAndFlush(event);
         return ResponseEntity.created(new URI("/api/events/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -81,19 +80,20 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/events")
-    @Transactional
     public ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event) throws URISyntaxException {
+        System.out.println("***********************************************************");
+        for(Comment com : event.getComments()) {
+        	System.out.println("Comment "+com.getCommentBody());
+        }
+        System.out.println("***********************************************************");
         if (event.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++"+event.getComments().size());
         Event result = eventRepository.save(event);
+        eventRepository.flush();
         Event res = eventRepository.getOne(event.getId());
-        System.out.println("***********************************************************");
-        for(Comment com : res.getComments()) {
-        	System.out.println("Comment "+com.getCommentBody());
-        }
-        System.out.println("***********************************************************");
+
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getId().toString()))
@@ -126,23 +126,26 @@ public class EventResource {
     public ResponseEntity<Event> getEvent(@PathVariable Long id) {
     	System.out.println("in event by id");
         Optional<Event> event = eventRepository.findById(id);
-        System.out.println("----------------------------------------------------"+event.get().getComments().toString());
+        System.out.println("----------------------------------------------------");
+        System.out.println("--                                                --");
+        System.out.println("--                                                --");
+        System.out.println("--                  "+event.get().getComments().size()+"                             --");
+        System.out.println("--                  "+event.get().getParticipants().size()+"                             --");
+
+        System.out.println("--                                                --");
+        System.out.println("----------------------------------------------------");
+
         return ResponseUtil.wrapOrNotFound(event);
     }
     
-    @GetMapping("/events/part/{id}")
-    public ResponseEntity<Event> getEventID(@PathVariable Long id) {
-    	System.out.println("im in controller ");
-        Optional<Event> event = eventRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(event);
-    }
-    
+
     
     @GetMapping("/events/participate/{id}/{userId}")
     public ResponseEntity<Event> participate(@PathVariable Long id,@PathVariable String userId) {
     	log.debug("Participating to event "+id+" The user is "+userId);
         Optional<Event> event = eventRepository.findById(id);
        User user = userRepository.findOneByLogin(userId).get();
+       System.out.println("This is the user first name "+user.getFirstName());
        Set<User> participants = event.get().getParticipants();
        participants.add(user);
        event.get().setParticipants(participants);
