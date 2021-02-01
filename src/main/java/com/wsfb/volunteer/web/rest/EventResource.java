@@ -168,14 +168,17 @@ public class EventResource {
     	
         Optional<Event> event = eventRepository.findById(id);
        User user = userRepository.findOneByLogin(userId).get();
+
        System.out.println("This is the user first name "+user.getFirstName());
        Set<User> reports = event.get().getReports();
+       if(reports.contains(user)) {
+
        reports.add(user);
        event.get().setReports(reports);
        System.out.println("Event reprots "+event.get().getParticipants());
        if(reports.size()>REPORTS_MAX) {
     	   eventRepository.delete(event.get());
-       }
+       }}
        return ResponseUtil.wrapOrNotFound(event);
 
     }
