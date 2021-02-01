@@ -79,6 +79,13 @@ public class Event implements Serializable {
     		  joinColumns = @JoinColumn(name = "event_id"),
     		  inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> participants = new HashSet<>();
+    
+    @ManyToMany
+    @JoinTable(
+    		  name = "event_reports", 
+    		  joinColumns = @JoinColumn(name = "event_id"),
+    		  inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> eventReports = new HashSet<>();
 
     @ManyToOne
     private User owner;
@@ -201,6 +208,16 @@ public class Event implements Serializable {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
+	}
+	
+	
+
+	public Set<User> getReports() {
+		return eventReports;
+	}
+
+	public void setReports(Set<User> reports) {
+		this.eventReports = reports;
 	}
 
 	@Override

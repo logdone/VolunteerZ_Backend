@@ -1,6 +1,7 @@
 package com.wsfb.volunteer.web.rest;
 
 import com.wsfb.volunteer.domain.Reaction;
+import com.wsfb.volunteer.repository.EventRepository;
 import com.wsfb.volunteer.repository.ReactionRepository;
 import com.wsfb.volunteer.web.rest.errors.BadRequestAlertException;
 
@@ -40,9 +41,11 @@ public class ReactionResource {
     private String applicationName;
 
     private final ReactionRepository reactionRepository;
+    private final EventRepository eventRepository;
 
-    public ReactionResource(ReactionRepository reactionRepository) {
+    public ReactionResource(ReactionRepository reactionRepository,EventRepository eventRepository) {
         this.reactionRepository = reactionRepository;
+		this.eventRepository = eventRepository;
     }
 
     /**
@@ -112,6 +115,12 @@ public class ReactionResource {
         return ResponseUtil.wrapOrNotFound(reaction);
     }
 
+    @GetMapping("/reactions/event/{id}")
+    public ResponseEntity<List<Reaction>> getReactionByEvent(@PathVariable Long id) {
+        log.debug("REST request to get Reaction : {}", id);
+        List<Reaction> reaction = reactionRepository.findByEvent(eventRepository.findById(id).get());
+        return ResponseEntity.ok().body(reaction);
+    }
     /**
      * {@code DELETE  /reactions/:id} : delete the "id" reaction.
      *

@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Comment.
@@ -39,6 +41,14 @@ public class Comment implements Serializable {
     @JsonIgnoreProperties("comments")
     private User user;
 
+    @ManyToMany
+    @JoinTable(
+    		  name = "comment_reports", 
+    		  joinColumns = @JoinColumn(name = "comment_id"),
+    		  inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> commentReport = new HashSet<>();
+    
+    
     public Comment() {}
     
     
@@ -90,6 +100,12 @@ public class Comment implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
+	public Set<User> getReports() {
+		return commentReport;
+	}
 
+	public void setReports(Set<User> reports) {
+		this.commentReport = reports;
+	}
 
 }

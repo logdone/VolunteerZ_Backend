@@ -39,7 +39,7 @@ import java.util.Set;
 public class EventResource {
 
     private final Logger log = LoggerFactory.getLogger(EventResource.class);
-
+    private final int REPORTS_MAX = 15;
     private static final String ENTITY_NAME = "event";
 
     @Value("${jhipster.clientApp.name}")
@@ -157,6 +157,25 @@ public class EventResource {
        participants.add(user);
        event.get().setParticipants(participants);
        System.out.println("Event participants "+event.get().getParticipants());
+       return ResponseUtil.wrapOrNotFound(event);
+
+    }
+    
+    
+    @GetMapping("/events/report/{id}/{userId}")
+    public ResponseEntity<Event> report(@PathVariable Long id,@PathVariable String userId) {
+    	log.debug("Participating to event "+id+" The user is "+userId);
+    	
+        Optional<Event> event = eventRepository.findById(id);
+       User user = userRepository.findOneByLogin(userId).get();
+       System.out.println("This is the user first name "+user.getFirstName());
+       Set<User> reports = event.get().getReports();
+       reports.add(user);
+       event.get().setReports(reports);
+       System.out.println("Event reprots "+event.get().getParticipants());
+       if(reports.size()>REPORTS_MAX) {
+    	   eventRepository.delete(event.get());
+       }
        return ResponseUtil.wrapOrNotFound(event);
 
     }
