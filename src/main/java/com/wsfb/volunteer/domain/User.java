@@ -106,10 +106,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @ManyToMany(mappedBy = "participants")
     private Set<Event> events;
     
+    
     @ManyToMany(mappedBy = "eventReports")
+    @JsonIgnore
     private Set<Event> reportedEvents;
     
-    @ManyToMany(mappedBy = "commentReport")
+    @ManyToMany(mappedBy = "commentReports")
+    @JsonIgnore
     private Set<Comment> reportedComments;
     
     public Long getId() {

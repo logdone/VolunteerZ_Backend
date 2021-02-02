@@ -1,6 +1,5 @@
 package com.wsfb.volunteer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -31,39 +30,22 @@ public class Comment implements Serializable {
     @Column(name = "comment_body", length = 200, nullable = false)
     private String commentBody;
 
-    @ManyToOne
-    @JoinColumn(name="event_id", nullable=false)
-    @JsonIgnoreProperties({"comments","reactions"})
-    private Event event;
-
-    @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
-    @JsonIgnoreProperties("comments")
-    private User user;
-
     @ManyToMany
     @JoinTable(
     		  name = "comment_reports", 
     		  joinColumns = @JoinColumn(name = "comment_id"),
     		  inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> commentReport = new HashSet<>();
-    
-    
-    public Comment() {}
-    
-    
-    
-    
-    
-    public Comment(Long id,  String commentBody, Event event, User user) {
-		super();
-		this.id = id;
-		this.commentBody = commentBody;
-		this.event = event;
-		this.user = user;
-	}
+    private Set<User> commentReports = new HashSet<>();
 
-	// jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToOne
+    @JsonIgnoreProperties(value = "comments", allowSetters = true)
+    private Event event;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "owner", allowSetters = true)
+    private User user;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -76,6 +58,10 @@ public class Comment implements Serializable {
         return commentBody;
     }
 
+    public Comment commentBody(String commentBody) {
+        this.commentBody = commentBody;
+        return this;
+    }
 
     public void setCommentBody(String commentBody) {
         this.commentBody = commentBody;
@@ -85,27 +71,57 @@ public class Comment implements Serializable {
         return event;
     }
 
-
+    public Comment event(Event event) {
+        this.event = event;
+        return this;
+    }
 
     public void setEvent(Event event) {
         this.event = event;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User extendedUser) {
-        this.user = extendedUser;
-    }
+
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-	public Set<User> getReports() {
-		return commentReport;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Comment)) {
+            return false;
+        }
+        return id != null && id.equals(((Comment) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+	public Set<User> getCommentReports() {
+		return commentReports;
 	}
 
-	public void setReports(Set<User> reports) {
-		this.commentReport = reports;
+	public void setCommentReports(Set<User> commentReports) {
+		this.commentReports = commentReports;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", commentBody=" + commentBody + ", commentReports=" + commentReports + ", event="
+				+ event + ", user=" + user + "]";
+	}
+
 
 }

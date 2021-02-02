@@ -1,7 +1,10 @@
 package com.wsfb.volunteer.web.rest;
 
 import com.wsfb.volunteer.domain.Comment;
+import com.wsfb.volunteer.domain.Event;
+import com.wsfb.volunteer.domain.User;
 import com.wsfb.volunteer.repository.CommentRepository;
+import com.wsfb.volunteer.repository.UserRepository;
 import com.wsfb.volunteer.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -9,6 +12,7 @@ import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing {@link com.wsfb.volunteer.domain.Comment}.
@@ -39,11 +44,16 @@ public class CommentResource {
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
+    private final int REPORTS_MAX = 5;
 
     private final CommentRepository commentRepository;
-
-    public CommentResource(CommentRepository commentRepository) {
+    
+    
+    private final  UserRepository userRepository;
+    
+    public CommentResource(CommentRepository commentRepository,UserRepository userRepository) {
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -113,6 +123,30 @@ public class CommentResource {
         return ResponseUtil.wrapOrNotFound(comment);
     }
 
+    
+    @GetMapping("/comments/report/{id}/{userId}")
+    public ResponseEntity<Comment> report(@PathVariable Long id,@PathVariable String userId) {
+    	log.debug("Participating to event "+id+" The user is "+userId);
+    	
+        Optional<Comment> comment = commentRepository.findById(id);
+
+       User user = userRepository.findOneByLogin(userId).get();
+
+       System.out.println("This is the user first name "+user.getFirstName());
+       Set<User> reports = comment.get().getCommentReports();
+       if(!reports.contains(user)) {
+
+       reports.add(user);
+       comment.get().setCommentReports(reports);
+       if(reports.size()>=REPORTS_MAX) {
+    	   commentRepository.delete(comment.get());
+       }}
+       return ResponseUtil.wrapOrNotFound(comment);
+
+    }
+    
+    
+    
     /**
      * {@code DELETE  /comments/:id} : delete the "id" comment.
      *

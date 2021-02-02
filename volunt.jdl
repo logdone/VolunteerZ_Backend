@@ -7,14 +7,12 @@ entity Event {
     creationDate ZonedDateTime required,
     eventDate ZonedDateTime required,
     maxNumberVolunteers Integer min(0),
-    nbrReports Integer,
     link String,
     location String required,
     
 }
 
-entity ExtendedUser {
-}
+
 
 entity Comment {
     commentBody String required maxlength(200),
@@ -26,20 +24,24 @@ entity Reaction {
 
 
 relationship ManyToOne {
-	Event{owner} to ExtendedUser,
+	Event{owner} to User,
 }
+
 
 // defining multiple oneToOne relationships
 relationship OneToMany {
     Event to Comment,
     Event to Reaction,
-    Event{participants} to ExtendedUser,
-    ExtendedUser to Comment,
-    ExtendedUser to Reaction,
+    Event{participants} to User,
+    Event{reporter} to User,
+    Comment{reporter} to User,
+
+    User to Comment,
+    User to Reaction,
 }
 
 // Set pagination options
-paginate Comment, Event, ExtendedUser , Reaction with pagination
+paginate Comment, Event, User , Reaction with pagination
 
 // Use Data Transfer Objects (DTO)
 // dto * with mapstruct

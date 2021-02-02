@@ -138,7 +138,7 @@ public class EventResource {
         System.out.println("--                  "+event.get().getParticipants().size()+"                             --");
         System.out.println("--                  "+event.get().getReactions().size()+"                             --");
 
-
+ 
         System.out.println("--                                                --");
         System.out.println("----------------------------------------------------");
 
@@ -167,14 +167,16 @@ public class EventResource {
     	log.debug("Participating to event "+id+" The user is "+userId);
     	
         Optional<Event> event = eventRepository.findById(id);
+       System.out.println("Reports "+event.get().getEventReports().size());
+
        User user = userRepository.findOneByLogin(userId).get();
 
        System.out.println("This is the user first name "+user.getFirstName());
-       Set<User> reports = event.get().getReports();
-       if(reports.contains(user)) {
+       Set<User> reports = event.get().getEventReports();
+       if(!reports.contains(user)) {
 
        reports.add(user);
-       event.get().setReports(reports);
+       event.get().setEventReports(reports);
        System.out.println("Event reprots "+event.get().getParticipants());
        if(reports.size()>REPORTS_MAX) {
     	   eventRepository.delete(event.get());

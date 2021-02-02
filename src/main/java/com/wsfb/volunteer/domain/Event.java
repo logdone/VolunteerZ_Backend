@@ -209,15 +209,13 @@ public class Event implements Serializable {
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
-	
-	
 
-	public Set<User> getReports() {
+	public Set<User> getEventReports() {
 		return eventReports;
 	}
 
-	public void setReports(Set<User> reports) {
-		this.eventReports = reports;
+	public void setEventReports(Set<User> eventReports) {
+		this.eventReports = eventReports;
 	}
 
 	@Override
@@ -225,8 +223,15 @@ public class Event implements Serializable {
 		return "Event [id=" + id + ", title=" + title + ", eventDescription=" + eventDescription + ", eventImage="
 				+ eventImage + ", category=" + category + ", creationDate=" + creationDate + ", eventDate=" + eventDate
 				+ ", maxNumberVolunteers=" + maxNumberVolunteers + ", nbrReports=" + nbrReports + ", link=" + link
-				+ ", location=" + location + ", owner=" + owner + "]";
+				+ ", location=" + location + ", comments=" + comments + ", reactions=" + reactions + ", participants="
+				+ participants + ", eventReports=" + eventReports + ", owner=" + owner + "]";
 	}
+	
+	
+
+
+
+
 
 	
 
