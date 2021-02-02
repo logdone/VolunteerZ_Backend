@@ -116,6 +116,9 @@ public class EventResource {
              System.out.println("--    "+e.getParticipants().size()+"        --");
              System.out.println("--    "+e.getReactions().size()+"     --");
              System.out.println("--    "+e.getEventReports().size()+"     --");
+             for(Comment c :e.getComments()) {
+                 System.out.println("--    "+c.getCommentReports().size()+"     --");
+             }
 
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

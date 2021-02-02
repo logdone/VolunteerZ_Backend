@@ -119,9 +119,10 @@ public class Comment implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", commentBody=" + commentBody + ", commentReports=" + commentReports + ", event="
-				+ event + ", user=" + user + "]";
+		return "Comment [id=" + id + ", commentBody=" + commentBody + ", commentReports=" + commentReports + 
+				 ", user=" + user + "]";
 	}
 
+	
 
 }
