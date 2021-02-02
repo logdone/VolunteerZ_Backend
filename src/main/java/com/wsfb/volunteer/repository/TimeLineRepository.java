@@ -9,5 +9,5 @@ import com.wsfb.volunteer.domain.TimeLine;
 import com.wsfb.volunteer.domain.User;
 
 public interface TimeLineRepository extends JpaRepository<TimeLine, Long>{
-	List<TimeLine> findByOwner(User user);
+	List<TimeLine> findByOwnerOrderByTime(User user);
 }

@@ -41,7 +41,7 @@ public class TimeLine implements Serializable {
     
     
     
-    
+    public TimeLine() {}
 
 	public TimeLine(String action, String to, User timeline_owner) {
 		super();

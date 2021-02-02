@@ -51,8 +51,10 @@ public class EventResource {
 
     @Autowired
     public  EventRepository eventRepository;
+    
     @Autowired
     public  UserRepository userRepository;
+    
     @Autowired
     public  TimeLineRepository timeLineRepository;
 
