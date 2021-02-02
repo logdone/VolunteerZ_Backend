@@ -43,9 +43,9 @@ public class TimeLineResource {
 	    public  UserRepository userRepository;
 
 	    @GetMapping("/timeline/{id}")
-	    public List<TimeLine> getAllReactions(@PathVariable Long id) {
+	    public List<TimeLine> getAllReactions(@PathVariable String id) {
 	        log.debug("REST request to get a page of Reactions");
-	        List<TimeLine> list = timeLineRepository.findByOwnerOrderByTime(userRepository.getOne(id));
+	        List<TimeLine> list = timeLineRepository.findByOwnerOrderByTime(userRepository.findOneByLogin(id).get());
 	        return list;
 	    }
 }

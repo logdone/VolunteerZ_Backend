@@ -67,12 +67,22 @@ public class TimeLine implements Serializable {
 		this.action = action;
 	}
 
-	public String getTo() {
+
+
+	public String getTargetObject() {
 		return targetObject;
 	}
 
-	public void setTo(String to) {
-		this.targetObject = to;
+	public void setTargetObject(String targetObject) {
+		this.targetObject = targetObject;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	public Instant getTime() {
@@ -83,13 +93,6 @@ public class TimeLine implements Serializable {
 		this.time = time;
 	}
 
-	public User getUser() {
-		return owner;
-	}
-
-	public void setUser(User timeline_owner) {
-		this.owner = timeline_owner;
-	}
 	
 
 
