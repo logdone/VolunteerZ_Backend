@@ -106,6 +106,9 @@ public class CommentResource {
     public ResponseEntity<List<Comment>> getAllComments(Pageable pageable) {
         log.debug("REST request to get a page of Comments");
         Page<Comment> page = commentRepository.findAll(pageable);
+        for(Comment e : page) {
+       	 System.out.println("------------  "+e.getCommentReports().size()+"----------  --");
+       }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
