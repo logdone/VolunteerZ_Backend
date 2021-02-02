@@ -1,8 +1,11 @@
 package com.wsfb.volunteer.web.rest;
 
 import com.wsfb.volunteer.domain.Reaction;
+import com.wsfb.volunteer.domain.TimeLine;
 import com.wsfb.volunteer.repository.EventRepository;
 import com.wsfb.volunteer.repository.ReactionRepository;
+import com.wsfb.volunteer.repository.TimeLineRepository;
+import com.wsfb.volunteer.repository.UserRepository;
 import com.wsfb.volunteer.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -42,10 +45,13 @@ public class ReactionResource {
 
     private final ReactionRepository reactionRepository;
     private final EventRepository eventRepository;
-
-    public ReactionResource(ReactionRepository reactionRepository,EventRepository eventRepository) {
+    private final  TimeLineRepository timeLineRepository;
+    
+    public ReactionResource(ReactionRepository reactionRepository,EventRepository eventRepository,TimeLineRepository timeLineRepository) {
         this.reactionRepository = reactionRepository;
 		this.eventRepository = eventRepository;
+        this.timeLineRepository = timeLineRepository;
+
     }
 
     /**
@@ -61,6 +67,9 @@ public class ReactionResource {
         if (reaction.getId() != null) {
             throw new BadRequestAlertException("A new reaction cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        
+        TimeLine t = new TimeLine("Reacted to ", reaction.getEvent().getTitle(),reaction.getUser());
+        timeLineRepository.saveAndFlush(t);
         Reaction result = reactionRepository.save(reaction);
         return ResponseEntity.created(new URI("/api/reactions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -82,6 +91,8 @@ public class ReactionResource {
         if (reaction.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        TimeLine t = new TimeLine("Updated reaction ", reaction.getEvent().getTitle(),reaction.getUser());
+        timeLineRepository.saveAndFlush(t);
         Reaction result = reactionRepository.save(reaction);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, reaction.getId().toString()))
@@ -99,6 +110,7 @@ public class ReactionResource {
         log.debug("REST request to get a page of Reactions");
         Page<Reaction> page = reactionRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
@@ -130,7 +142,11 @@ public class ReactionResource {
     @DeleteMapping("/reactions/{id}")
     public ResponseEntity<Void> deleteReaction(@PathVariable Long id) {
         log.debug("REST request to delete Reaction : {}", id);
+        Reaction r = reactionRepository.getOne(id);
+        TimeLine t = new TimeLine("Unreacted ", r.getEvent().getTitle(),r.getUser());
+        timeLineRepository.saveAndFlush(t);
         reactionRepository.deleteById(id);
+
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

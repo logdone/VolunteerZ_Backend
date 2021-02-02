@@ -2,11 +2,14 @@ package com.wsfb.volunteer.web.rest;
 
 import com.wsfb.volunteer.domain.Comment;
 import com.wsfb.volunteer.domain.Event;
+import com.wsfb.volunteer.domain.TimeLine;
 import com.wsfb.volunteer.domain.User;
 import com.wsfb.volunteer.repository.EventRepository;
+import com.wsfb.volunteer.repository.TimeLineRepository;
 import com.wsfb.volunteer.repository.UserRepository;
 import com.wsfb.volunteer.web.rest.errors.BadRequestAlertException;
 
+import io.github.jhipster.config.JHipsterProperties.Cache.Memcached.Authentication;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -49,7 +53,8 @@ public class EventResource {
     public  EventRepository eventRepository;
     @Autowired
     public  UserRepository userRepository;
-
+    @Autowired
+    public  TimeLineRepository timeLineRepository;
 
 
     /**
@@ -64,7 +69,20 @@ public class EventResource {
         if (event.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        
+        Set<User> participants = new HashSet<User>();
+        participants.add(event.getOwner());
+		event.setParticipants(participants);
         Event result = eventRepository.saveAndFlush(event);
+        TimeLine t = new TimeLine("Created event ", event.getTitle(), event.getOwner());
+        timeLineRepository.saveAndFlush(t);
+
+        System.out.println("*********************************************************************");
+        System.out.println("******************************"+t.getId()+"***********************************");
+
+        System.out.println("*********************************************************************");
+
+        
         return ResponseEntity.created(new URI("/api/events/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +114,8 @@ public class EventResource {
         eventRepository.flush();
         Event res = eventRepository.getOne(event.getId());
 
-
+        TimeLine t = new TimeLine("Updated event ", event.getTitle(), event.getOwner());
+        timeLineRepository.saveAndFlush(t);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getId().toString()))
             .body(result);
@@ -161,6 +180,8 @@ public class EventResource {
        Set<User> participants = event.get().getParticipants();
        participants.add(user);
        event.get().setParticipants(participants);
+       TimeLine t = new TimeLine("Participated to event ", event.get().getTitle(), user);
+       timeLineRepository.saveAndFlush(t);
        System.out.println("Event participants "+event.get().getParticipants());
        return ResponseUtil.wrapOrNotFound(event);
 
@@ -183,6 +204,8 @@ public class EventResource {
        reports.add(user);
        event.get().setEventReports(reports);
        System.out.println("Event reprots "+event.get().getParticipants());
+       TimeLine t = new TimeLine("Reported  event ", event.get().getTitle(), user);
+
        if(reports.size()>REPORTS_MAX) {
     	   eventRepository.delete(event.get());
        }}

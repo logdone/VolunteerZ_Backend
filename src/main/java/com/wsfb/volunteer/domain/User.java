@@ -86,6 +86,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
 
+    @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<TimeLine> timeLine = new HashSet<>();
+    
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Reaction> reactions = new HashSet<>();
@@ -248,9 +252,41 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setReactions(Set<Reaction> reactions) {
         this.reactions = reactions;
     }
+    
+    
+    
+    
 
     
-    @Override
+    public Set<TimeLine> getTimeLine() {
+		return timeLine;
+	}
+
+	public void setTimeLine(Set<TimeLine> timeLine) {
+		this.timeLine = timeLine;
+	}
+
+	public Set<Event> getReportedEvents() {
+		return reportedEvents;
+	}
+
+	public void setReportedEvents(Set<Event> reportedEvents) {
+		this.reportedEvents = reportedEvents;
+	}
+
+	public Set<Comment> getReportedComments() {
+		return reportedComments;
+	}
+
+	public void setReportedComments(Set<Comment> reportedComments) {
+		this.reportedComments = reportedComments;
+	}
+
+	public void setEvents(Set<Event> events) {
+		this.events = events;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

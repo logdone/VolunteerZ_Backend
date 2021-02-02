@@ -14,6 +14,7 @@ import java.util.Set;
 /**
  * A Comment.
  */
+
 @Entity
 @Table(name = "comment")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

@@ -2,8 +2,10 @@ package com.wsfb.volunteer.web.rest;
 
 import com.wsfb.volunteer.domain.Comment;
 import com.wsfb.volunteer.domain.Event;
+import com.wsfb.volunteer.domain.TimeLine;
 import com.wsfb.volunteer.domain.User;
 import com.wsfb.volunteer.repository.CommentRepository;
+import com.wsfb.volunteer.repository.TimeLineRepository;
 import com.wsfb.volunteer.repository.UserRepository;
 import com.wsfb.volunteer.web.rest.errors.BadRequestAlertException;
 
@@ -48,12 +50,14 @@ public class CommentResource {
 
     private final CommentRepository commentRepository;
     
+    private final  TimeLineRepository timeLineRepository;
     
     private final  UserRepository userRepository;
     
-    public CommentResource(CommentRepository commentRepository,UserRepository userRepository) {
+    public CommentResource(CommentRepository commentRepository,UserRepository userRepository,TimeLineRepository timeLineRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
+        this.timeLineRepository = timeLineRepository;
     }
 
     /**
@@ -70,6 +74,8 @@ public class CommentResource {
             throw new BadRequestAlertException("A new comment cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Comment result = commentRepository.save(comment);
+        TimeLine t = new TimeLine("Commented ", comment.getCommentBody(), comment.getUser());
+        timeLineRepository.saveAndFlush(t);
         return ResponseEntity.created(new URI("/api/comments/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -91,6 +97,8 @@ public class CommentResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Comment result = commentRepository.save(comment);
+        TimeLine t = new TimeLine("Edited comment ", comment.getCommentBody(), comment.getUser());
+        timeLineRepository.saveAndFlush(t);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, comment.getId().toString()))
             .body(result);
@@ -141,6 +149,8 @@ public class CommentResource {
 
        reports.add(user);
        comment.get().setCommentReports(reports);
+       TimeLine t = new TimeLine("Reported comment ", comment.get().getCommentBody(), comment.get().getUser());
+       timeLineRepository.saveAndFlush(t);
        if(reports.size()>=REPORTS_MAX) {
     	   commentRepository.delete(comment.get());
        }}
@@ -160,6 +170,9 @@ public class CommentResource {
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         log.debug("REST request to delete Comment : {}", id);
         commentRepository.deleteById(id);
+        Comment comment = commentRepository.getOne(id);
+        TimeLine t = new TimeLine("Deleted comment ", comment.getCommentBody(), comment.getUser());
+        timeLineRepository.saveAndFlush(t);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }
