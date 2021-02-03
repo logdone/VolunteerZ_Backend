@@ -186,6 +186,22 @@ public class EventResource {
        timeLineRepository.saveAndFlush(t);
        System.out.println("Event participants "+event.get().getParticipants());
        return ResponseUtil.wrapOrNotFound(event);
+    }
+    
+    
+    @GetMapping("/events/unparticipate/{id}/{userId}")
+    public ResponseEntity<Event> unparticipate(@PathVariable Long id,@PathVariable String userId) {
+    	log.debug("Participating to event "+id+" The user is "+userId);
+        Optional<Event> event = eventRepository.findById(id);
+       User user = userRepository.findOneByLogin(userId).get();
+       System.out.println("This is the user first name "+user.getFirstName());
+       Set<User> participants = event.get().getParticipants();
+       participants.remove(user);
+       event.get().setParticipants(participants);
+       TimeLine t = new TimeLine("Unparticipated to event ", event.get().getTitle(), user);
+       timeLineRepository.saveAndFlush(t);
+       System.out.println("Event unparticipanted "+event.get().getParticipants());
+       return ResponseUtil.wrapOrNotFound(event);
 
     }
     

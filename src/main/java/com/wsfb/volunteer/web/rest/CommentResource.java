@@ -169,10 +169,11 @@ public class CommentResource {
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         log.debug("REST request to delete Comment : {}", id);
-        commentRepository.deleteById(id);
         Comment comment = commentRepository.getOne(id);
         TimeLine t = new TimeLine("Deleted comment ", comment.getCommentBody(), comment.getUser());
         timeLineRepository.saveAndFlush(t);
+        commentRepository.deleteById(id);
+
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

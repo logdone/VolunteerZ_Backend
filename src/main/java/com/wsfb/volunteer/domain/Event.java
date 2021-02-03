@@ -66,11 +66,11 @@ public class Event implements Serializable {
     private String location;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("event")
+    @JsonIgnoreProperties(value = {"event"}, allowSetters = true)
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "event" , fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("event")
+    @JsonIgnoreProperties(value = {"event"}, allowSetters = true)
     private Set<Reaction> reactions = new HashSet<>();
 
     @ManyToMany

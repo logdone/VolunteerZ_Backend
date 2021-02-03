@@ -118,11 +118,7 @@ public class Comment implements Serializable {
 		this.user = user;
 	}
 
-	@Override
-	public String toString() {
-		return "Comment [id=" + id + ", commentBody=" + commentBody + ", commentReports=" + commentReports + 
-				 ", user=" + user + "]";
-	}
+
 
 	
 
